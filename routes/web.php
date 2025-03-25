@@ -27,6 +27,11 @@ Route::middleware(['auth'])->group(function () {
 
     // System Routes
     Route::get('/edit', [SystemController::class, 'settings'])->name('system.edit');
+    Route::post('/update/short_name', [SystemController::class, 'updateShortName'])->name('system.update.short_name');
+    Route::post('/update/long_name', [SystemController::class, 'updateLongName'])->name('system.update.long_name');
+    Route::post('/add-room', [SystemController::class, 'addRoom'])->name('room.add');
+    Route::post('/update-room', [SystemController::class, 'editRoom'])->name('room.update');
+    Route::post('/delete-room', [SystemController::class, 'deleteRoom'])->name('room.delete');
 
     // User Routes
     Route::get('/users', [UserController::class, 'index'])->name('users.view');

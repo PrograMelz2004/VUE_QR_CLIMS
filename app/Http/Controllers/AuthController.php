@@ -10,6 +10,9 @@ class AuthController extends Controller
 {
     public function index()
     {
+        if (Auth::check()) {
+            return redirect()->route('items.view');
+        }
         return view('auth');
     }
 
