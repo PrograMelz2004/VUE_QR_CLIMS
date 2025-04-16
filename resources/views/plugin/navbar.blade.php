@@ -12,20 +12,22 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item mt-2">
-                    <a class="nav-link text-white d-flex align-items-center {{ request()->routeIs('items.view') ? 'active' : '' }}" href="{{ route('items.view') }}">
-                        <img src="img/design.png" width="24" class="me-2"> View Items
-                    </a>
-                </li>
-                <li class="nav-item mt-2">
-                    <a class="nav-link text-white d-flex align-items-center {{ request()->routeIs('items.scan') ? 'active' : '' }}" href="{{ route('items.scan') }}">
-                        <img src="img/print.png" width="24" class="me-2"> Scan Items
-                    </a>
-                </li>
-                <li class="nav-item mt-2">
                     <a class="nav-link text-white d-flex align-items-center {{ request()->routeIs('users.view') ? 'active' : '' }}" href="{{ route('users.view') }}">
                         <img src="img/circle.png" width="24" class="me-2"> Users
                     </a>
                 </li>
+
+                <li class="nav-item mt-2">
+                    <a class="nav-link text-white d-flex align-items-center {{ request()->routeIs('items.view') ? 'active' : '' }}" href="{{ route('items.view') }}">
+                        <img src="img/design.png" width="24" class="me-2"> Items
+                    </a>
+                </li>
+                <li class="nav-item mt-2">
+                    <a class="nav-link text-white d-flex align-items-center {{ request()->routeIs('items.scan') ? 'active' : '' }}" href="{{ route('items.scan') }}">
+                        <img src="img/print.png" width="24" class="me-2"> Borrow / Return
+                    </a>
+                </li>
+                
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
