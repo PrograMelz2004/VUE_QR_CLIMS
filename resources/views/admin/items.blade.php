@@ -81,7 +81,7 @@ $codee = substr(bin2hex(random_bytes(10)), 0, 10);
                 <td>{{ $count++ }}.</td>
                 <td>{{ $item->name }}</td>
                 <td>{{ $item->quantity }}</td>
-                <td>0</td>
+                <td>{{ $item->borrowed }}</td>
                 <td>{{ $item->quantity }}</td>
                 <td>{{ \Carbon\Carbon::parse($item->created_at)->format('M. d, Y h:i A') }}</td>
                 <td>

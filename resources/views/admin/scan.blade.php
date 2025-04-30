@@ -139,7 +139,7 @@
         let newRow = `<tr>
             <td>${item.name}</td>
             <td>${item.quantity}</td>
-            <td>0</td>
+            <td>${item.borrowed}</td>
             <td>
                 <button class="btn btn-success btn-sm borrow-btn" data-name="${item.name}" data-quantity="${item.quantity}">Borrow</button>
             </td>

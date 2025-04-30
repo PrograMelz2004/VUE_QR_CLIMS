@@ -13,6 +13,12 @@ class ItemController extends Controller
     public function index()
     {
         $items = Item::all();
+
+        foreach($items as $item){
+            $borrowedCount = Borrowed::where('item_id', $item->id)->sum('quantity');
+            $item->borrowed = $borrowedCount;
+        }
+
         return view('admin/items', compact('items'), ['user' => Auth::user()]);
     }
 
@@ -28,8 +34,12 @@ class ItemController extends Controller
     {
         $scannedCode = $request->input('qrcode');
         $item = Item::where('qrcode', $scannedCode)->first();
-
+    
         if ($item) {
+            $borrowedCount = Borrowed::where('item_id', $item->id)->sum('quantity');
+
+            $item->borrowed = $borrowedCount;
+    
             return response()->json([
                 'success' => true,
                 'item' => $item
@@ -41,7 +51,7 @@ class ItemController extends Controller
             ]);
         }
     }
-
+    
     public function store(Request $request)
     {
         Item::create($request->all());
