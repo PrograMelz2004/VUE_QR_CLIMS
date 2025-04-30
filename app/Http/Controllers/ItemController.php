@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Item;
+use App\Models\Items_list;
 use Illuminate\Support\Facades\DB;
 use App\Models\Borrowed;
 use Carbon\Carbon;
@@ -12,15 +13,10 @@ class ItemController extends Controller
 {
     public function index()
     {
-        $items = Item::all();
-
-        foreach($items as $item){
-            $borrowedCount = Borrowed::where('item_id', $item->id)->sum('quantity');
-            $item->borrowed = $borrowedCount;
-        }
-
-        return view('admin/items', compact('items'), ['user' => Auth::user()]);
+        $items_lists = Items_list::with('items')->get();
+        return view('admin.items', compact('items_lists'), ['user' => Auth::user()]);
     }
+    
 
     public function scanner()
     {

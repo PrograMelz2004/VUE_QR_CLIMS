@@ -45,7 +45,7 @@
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->quantity }}</td>
-                    <td>0</td>
+                    <td>{{ $item->borrowed }}</td>
                     <td>{{ \Carbon\Carbon::parse($item->created_at)->format('M j, Y h:i A') }}</td>
                 </tr>
             @endforeach

@@ -86,8 +86,7 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Borrowed</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -110,10 +109,7 @@
                         <label for="borrower-name" class="form-label">Name of Borrower</label>
                         <input type="text" class="form-control" id="borrower-name" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="borrow-quantity" class="form-label">Quantity Borrowed</label>
-                        <input type="number" class="form-control" id="borrower-quantity" required max="">
-                    </div>
+                    <input type="number" class="form-control" id="borrower-quantity" value="1" required hidden>
                     <div class="mb-3">
                         <label for="borrow-room" class="form-label">Room</label>
                         <select class="form-control" id="borrow-room" required>
@@ -136,14 +132,18 @@
     let scanCooldown = false;
 
     function renderScannedItem(item) {
+        let status = item.borrowed == 1 ? "Borrowed" : "At Shelf";
+        
+        let actionButton = item.borrowed == 1
+            ? `<button class="btn btn-warning btn-sm return-btn" data-name="${item.name}" data-quantity="${item.quantity}">Return</button>`
+            : `<button class="btn btn-success btn-sm borrow-btn" data-name="${item.name}" data-quantity="${item.quantity}">Borrow</button>`;
+        
         let newRow = `<tr>
             <td>${item.name}</td>
-            <td>${item.quantity}</td>
-            <td>${item.borrowed}</td>
-            <td>
-                <button class="btn btn-success btn-sm borrow-btn" data-name="${item.name}" data-quantity="${item.quantity}">Borrow</button>
-            </td>
+            <td>${status}</td>
+            <td>${actionButton}</td>
         </tr>`;
+        
         $("#scanned-items").html(newRow);
     }
 
@@ -176,10 +176,7 @@
     $(document).on('click', '.borrow-btn', function() {
         let itemName = $(this).data('name');
         let itemQuantity = $(this).data('quantity');
-
         $('#borrow-item-name').val(itemName);
-        $('#borrow-item-quantity').val(itemQuantity);
-        $('#borrower-quantity').attr('max', itemQuantity);
         $('#borrowModal').modal('show');
     });
 

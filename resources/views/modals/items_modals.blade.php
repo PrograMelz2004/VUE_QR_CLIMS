@@ -39,10 +39,7 @@
                         <label>Item Name</label>
                         <input type="text" id="editItemName" class="form-control" required>
                     </div>
-                    <div class="mb-3">
-                        <label>Quantity</label>
-                        <input type="number" id="editItemQuantity" class="form-control" required>
-                    </div>
+                    <input type="number" id="editItemQuantity" class="form-control" required hidden required>
                     <button type="submit" class="btn btn-success">Update</button>
                 </form>
             </div>

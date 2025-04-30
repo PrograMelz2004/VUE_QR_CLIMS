@@ -43,15 +43,13 @@
 </head>
 <body>
 
-<?php
-$codee = substr(bin2hex(random_bytes(10)), 0, 10);
-?>
+<?php $codee = substr(bin2hex(random_bytes(10)), 0, 10); ?>
 
 @include('plugin.navbar')
 
 <img src="img/sc_logo_bgr.png" alt="EVSU-DC Logo" class="logo">
 
-<div class="container mt-4">        
+<div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
             <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addItemModal">Add New Item</button>
@@ -67,42 +65,87 @@ $codee = substr(bin2hex(random_bytes(10)), 0, 10);
             <tr>
                 <th>#</th>
                 <th>Item Name</th>
-                <th>Total Qty</th>
+                <th>Quantity</th>
                 <th>Borrowed</th>
-                <th>At Shelf</th>
-                <th>Added</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody id="itemTable">
-            <?php $count = 1; ?>
-            @foreach($items as $item)
+            @foreach($items_lists as $index => $list)
             <tr class="searchable">
-                <td>{{ $count++ }}.</td>
-                <td>{{ $item->name }}</td>
-                <td>{{ $item->quantity }}</td>
-                <td>{{ $item->borrowed }}</td>
-                <td>{{ $item->quantity }}</td>
-                <td>{{ \Carbon\Carbon::parse($item->created_at)->format('M. d, Y h:i A') }}</td>
+                <td>{{ $index + 1 }}.</td>
+                <td>{{ $list->name }}</td>
+                <td>{{ $index + 1 }}</td>
+                <td>{{ $index + 1 }}</td>
                 <td>
-                    <button class="btn btn-success btn-sm qrModal" data-qrcode="{{ $item->qrcode }}">QR Code</button>
-                    <button class="btn btn-warning btn-sm editItemBtn" data-id="{{ $item->id }}" data-name="{{ $item->name }}" data-quantity="{{ $item->quantity }}">Edit</button>
-                    <button class="btn btn-danger btn-sm deleteItemBtn" data-id="{{ $item->id }}">Delete</button>
+                    <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#itemListModal{{ $list->id }}">
+                        View Items
+                    </button>
                 </td>
             </tr>
             @endforeach
             <tr id="noResultsRow" style="display: none;">
-                <td colspan="6" class="text-center text-white">No results found</td>
+                <td colspan="3" class="text-center text-white">No results found</td>
             </tr>
         </tbody>
     </table>
 </div>
 
+@foreach($items_lists as $list)
+<div class="modal fade" id="itemListModal{{ $list->id }}" tabindex="-1" aria-labelledby="itemListModalLabel{{ $list->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title">Items under "{{ $list->name }}"</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if($list->items->isEmpty())
+                    <p>No items found under this category.</p>
+                @else
+                    <table class="table table-bordered text-white">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Code</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($list->items as $i => $item)
+                            <tr>
+                                <td>{{ $i + 1 }}</td>
+                                <td>{{ $item->name }}</td>
+                                <td>{{ $item->qrcode }}</td>
+                                <td>
+                                    @if ($item->quantity == 0)
+                                        Borrowed
+                                    @elseif ($item->quantity == 1)
+                                        At Shelf
+                                    @endif
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-sm qrModal" data-qrcode="{{ $item->qrcode }}">QR Code</button>
+                                    <button class="btn btn-warning btn-sm editItemBtn" data-id="{{ $item->id }}" data-name="{{ $item->name }}" data-quantity="{{ $item->quantity }}">Edit</button>
+                                    <button class="btn btn-danger btn-sm deleteItemBtn" data-id="{{ $item->id }}">Delete</button>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
 @include('modals.items_modals')
 
 <script>
     $(document).ready(function () {
-        // Search functionality
         $('#searchInput').on('keyup', function () {
             let value = $(this).val().toLowerCase();
             let found = false;
@@ -119,7 +162,6 @@ $codee = substr(bin2hex(random_bytes(10)), 0, 10);
             $('#noResultsRow').toggle(!found);
         });
 
-        // Add item
         $('#addItemForm').submit(function (e) {
             e.preventDefault();
             $.ajax({
@@ -137,7 +179,6 @@ $codee = substr(bin2hex(random_bytes(10)), 0, 10);
             });
         });
 
-        // Edit item modal
         $('.editItemBtn').click(function () {
             $('#editItemId').val($(this).data('id'));
             $('#editItemName').val($(this).data('name'));
@@ -145,7 +186,6 @@ $codee = substr(bin2hex(random_bytes(10)), 0, 10);
             $('#editItemModal').modal('show');
         });
 
-        // Edit item
         $('#editItemForm').submit(function (e) {
             e.preventDefault();
             $.ajax({
@@ -162,7 +202,6 @@ $codee = substr(bin2hex(random_bytes(10)), 0, 10);
             });
         });
 
-        // Delete item
         $('.deleteItemBtn').click(function () {
             let id = $(this).data('id');
             if (confirm("Are you sure you want to delete this item?")) {
@@ -180,11 +219,9 @@ $codee = substr(bin2hex(random_bytes(10)), 0, 10);
         $('.qrModal').click(function () {
             let qrCodeData = $(this).data('qrcode');
             let qrCodeUrl = "https://quickchart.io/qr?text=" + qrCodeData + "&dark=520000&size=400&centerImageUrl=https://i.ibb.co/QMRxkML/Untitled-design-2-removebg-preview.png";
-
             $('#qrCodeImage').attr('src', qrCodeUrl);
             $('#qrModal').modal('show');
         });
-
     });
 </script>
 

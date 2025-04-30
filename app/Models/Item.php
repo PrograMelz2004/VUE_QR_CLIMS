@@ -9,4 +9,9 @@ class Item extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'quantity', 'qrcode'];
+
+    public function itemsList()
+    {
+        return $this->belongsTo(Items_list::class);
+    }
 }

@@ -6,12 +6,18 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Item;
 use App\Models\User;
+use App\Models\Borrowed;
 
 class InventoryPdfController extends Controller
 {
     public function generateItemPdf()
     {
         $inventoryItems = Item::orderBy('created_at', 'desc')->get();
+
+        foreach($inventoryItems as $item){
+            $borrowedCount = Borrowed::where('item_id', $item->id)->sum('quantity');
+            $item->borrowed = $borrowedCount;
+        }
 
         $data = [
             'inventoryItems' => $inventoryItems,
