@@ -24,6 +24,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/scan', [ItemController::class, 'scan'])->name('items.scan');
     Route::patch('/items/{id}', [ItemController::class, 'update'])->name('items.update');
     Route::delete('/items/{id}', [ItemController::class, 'destroy'])->name('items.destroy');
+    Route::post('/borrow', [ItemController::class, 'borrow'])->name('items.borrow');
 
     // System Routes
     Route::get('/edit', [SystemController::class, 'settings'])->name('system.edit');

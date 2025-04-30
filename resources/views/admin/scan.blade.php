@@ -8,7 +8,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.3/html5-qrcode.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -48,7 +47,6 @@
             width: 60%;
             padding-left: 20px;
         }
-
         #qr-reader button {
             background-color: #ff5722 !important;
             color: white !important;
@@ -57,19 +55,15 @@
             border: none;
             cursor: pointer;
         }
-
         #qr-reader button:hover {
             background-color: #e64a19 !important;
         }
-
         #qr-reader a {
             color: black;
         }
-
         #qr-reader a:hover {
             color: white;
         }
-
         #qr-reader video {
             transform: scaleX(-1);
         }
@@ -103,7 +97,6 @@
     </div>
 </div>
 
-<!-- Borrow Modal -->
 <div class="modal fade" id="borrowModal" tabindex="-1" aria-labelledby="borrowModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -116,6 +109,10 @@
                     <div class="mb-3">
                         <label for="borrower-name" class="form-label">Name of Borrower</label>
                         <input type="text" class="form-control" id="borrower-name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="borrow-quantity" class="form-label">Quantity Borrowed</label>
+                        <input type="number" class="form-control" id="borrower-quantity" required max="">
                     </div>
                     <div class="mb-3">
                         <label for="borrow-room" class="form-label">Room</label>
@@ -138,6 +135,18 @@
 <script>
     let scanCooldown = false;
 
+    function renderScannedItem(item) {
+        let newRow = `<tr>
+            <td>${item.name}</td>
+            <td>${item.quantity}</td>
+            <td>0</td>
+            <td>
+                <button class="btn btn-success btn-sm borrow-btn" data-name="${item.name}" data-quantity="${item.quantity}">Borrow</button>
+            </td>
+        </tr>`;
+        $("#scanned-items").html(newRow);
+    }
+
     function onScanSuccess(decodedText, decodedResult) {
         if (scanCooldown) return;
 
@@ -152,17 +161,8 @@
             },
             success: function (response) {
                 if (response.success) {
-                    let newRow = `<tr>
-                        <td>${response.item.name}</td>
-                        <td>${response.item.quantity}</td>
-                        <td>0</td>
-                        <td>
-                            <button class="btn btn-success btn-sm borrow-btn" data-name="${response.item.name}" data-quantity="${response.item.quantity}">Borrow</button>
-                        </td>
-                    </tr>`;
-
-                    $("#scanned-items").html(newRow);
-
+                    renderScannedItem(response.item);
+                    localStorage.setItem('scannedItem', JSON.stringify(response.item));
                 } else {
                     alert("QR Code not found in the database.");
                 }
@@ -179,19 +179,58 @@
 
         $('#borrow-item-name').val(itemName);
         $('#borrow-item-quantity').val(itemQuantity);
+        $('#borrower-quantity').attr('max', itemQuantity);
         $('#borrowModal').modal('show');
     });
 
-    $('#borrow-form').submit(function(e) {
-        e.preventDefault();
-        alert('Item borrowed successfully!');
-        $('#borrowModal').modal('hide');
+    $(document).ready(function() {
+        let storedItem = localStorage.getItem('scannedItem');
+        if (storedItem) {
+            renderScannedItem(JSON.parse(storedItem));
+        }
     });
 
     let html5QrcodeScanner = new Html5QrcodeScanner(
         "qr-reader", { fps: 10, qrbox: 250 }
     );
     html5QrcodeScanner.render(onScanSuccess);
+
+    $('#borrow-form').submit(function(e) {
+        e.preventDefault();
+
+        let name = $('#borrow-item-name').val();
+        let quantity = parseInt($('#borrower-quantity').val());
+        let maxQty = parseInt($('#borrow-item-quantity').val());
+
+        if (quantity > maxQty) {
+            alert(`You can only borrow up to ${maxQty} item(s).`);
+            return;
+        }
+
+        $.ajax({
+            url: "{{ route('items.borrow') }}",
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                name: name,
+                quantity: quantity,
+                borrower_name: $('#borrower-name').val()
+            },
+            success: function(response) {
+                if (response.success) {
+                    alert('Item borrowed successfully and saved in the database!');
+                    localStorage.removeItem('scannedItem');
+                    location.reload();
+                } else {
+                    alert(response.message || 'Failed to borrow item.');
+                }
+            },
+            error: function() {
+                alert('Server error. Could not process borrow request.');
+            }
+        });
+    });
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

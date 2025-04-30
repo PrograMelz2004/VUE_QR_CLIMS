@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Item;
 use Illuminate\Support\Facades\DB;
+use App\Models\Borrowed;
+use Carbon\Carbon;
 
 class ItemController extends Controller
 {
@@ -55,6 +57,38 @@ class ItemController extends Controller
     public function destroy($id)
     {
         Item::findOrFail($id)->delete();
+        return response()->json(['success' => true]);
+    }
+
+
+    public function borrow(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'quantity' => 'required|integer|min:1',
+            'borrower_name' => 'required|string',
+        ]);
+
+        $item = Item::where('name', $request->name)->first();
+
+        if (!$item) {
+            return response()->json(['success' => false, 'message' => 'Item not found.']);
+        }
+
+        if ($item->quantity < $request->quantity) {
+            return response()->json(['success' => false, 'message' => 'Not enough quantity available.']);
+        }
+
+        $item->quantity -= $request->quantity;
+        $item->save();
+
+        Borrowed::create([
+            'borrower' => $request->borrower_name,
+            'item_id' => $item->id,
+            'quantity' => $request->quantity,
+            'borrowed_date' => Carbon::now(),
+        ]);
+
         return response()->json(['success' => true]);
     }
 }
