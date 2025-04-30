@@ -9,14 +9,20 @@
                 <form id="addItemForm">
                     @csrf
                     <div class="mb-3">
-                        <label>Item Name</label>
-                        <input type="text" id="addItemName" class="form-control" required>
+                        <label>Select Item Name</label>
+                        <select id="selectItemName" class="form-control" required>
+                            <option value="" disabled selected>Select an item</option>
+                            @foreach($items_lists as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-3">
-                        <label>Quantity</label>
-                        <input type="number" id="addItemQuantity" class="form-control" required>
-                        <input type="text" id="qrcode" class="form-control" value="{{ $codee }}" readonly hidden>
+                        <label>Item Specific Name</label>
+                        <input type="text" id="addItemSpecificName" class="form-control" required>
                     </div>
+                    <input type="number" id="addItemQuantity" class="form-control" value="1" required hidden>
+                    <input type="text" id="qrcode" class="form-control" value="{{ $codee }}" required hidden>
                     <button type="submit" class="btn btn-primary">Add Item</button>
                 </form>
             </div>

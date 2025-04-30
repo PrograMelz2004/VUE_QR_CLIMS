@@ -97,4 +97,25 @@ class ItemController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function return(Request $request)
+    {
+        $request->validate([
+            'item_id' => 'required|integer|min:1',
+        ]);
+
+        $item = Item::where('id', $request->item_id)->first();
+
+        if (!$item) {
+            return response()->json(['success' => false, 'message' => 'Item not found.']);
+        }
+
+        Borrowed::where('item_id', $item->id)->delete();
+
+        $item->quantity = 1;
+        $item->save();
+
+        return response()->json(['success' => true, 'message' => 'Item returned successfully.']);
+    }
+
 }

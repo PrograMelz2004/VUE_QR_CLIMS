@@ -8,7 +8,7 @@ class Item extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'quantity', 'qrcode'];
+    protected $fillable = ['name', 'quantity', 'qrcode', 'items_list_id'];
 
     public function itemsList()
     {

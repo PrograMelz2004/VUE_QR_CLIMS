@@ -75,8 +75,8 @@
             <tr class="searchable">
                 <td>{{ $index + 1 }}.</td>
                 <td>{{ $list->name }}</td>
-                <td>{{ $index + 1 }}</td>
-                <td>{{ $index + 1 }}</td>
+                <td>{{ $list->items->count() }}</td>
+                <td>{{ $list->items->where('quantity', 0)->count() }}</td>
                 <td>
                     <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#itemListModal{{ $list->id }}">
                         View Items
@@ -169,7 +169,8 @@
                 method: "POST",
                 data: {
                     _token: "{{ csrf_token() }}",
-                    name: $('#addItemName').val(),
+                    items_list_id: $('#selectItemName').val(),
+                    name: $('#addItemSpecificName').val(),
                     qrcode: $('#qrcode').val(),
                     quantity: $('#addItemQuantity').val()
                 },

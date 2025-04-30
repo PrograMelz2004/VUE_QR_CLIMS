@@ -128,6 +128,27 @@
     </div>
 </div>
 
+<div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="returnModalLabel">Return Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="return-form">
+                    <p>Are you sure you want to return this item?</p>
+                    <input type="number" id="return-item-id" required hidden>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-warning">Confirm Return</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     let scanCooldown = false;
 
@@ -135,7 +156,7 @@
         let status = item.borrowed == 1 ? "Borrowed" : "At Shelf";
         
         let actionButton = item.borrowed == 1
-            ? `<button class="btn btn-warning btn-sm return-btn" data-name="${item.name}" data-quantity="${item.quantity}">Return</button>`
+            ? `<button class="btn btn-warning btn-sm return-btn" data-id="${item.id}">Return</button>`
             : `<button class="btn btn-success btn-sm borrow-btn" data-name="${item.name}" data-quantity="${item.quantity}">Borrow</button>`;
         
         let newRow = `<tr>
@@ -227,6 +248,41 @@
             }
         });
     });
+
+    $(document).on('click', '.return-btn', function () {
+        let itemID = $(this).data('id');
+
+        $('#return-item-id').val(itemID);
+        $('#returnModal').modal('show');
+    });
+
+    $('#return-form').submit(function (e) {
+        e.preventDefault();
+
+        let itemID = $('#return-item-id').val();
+
+        $.ajax({
+            url: "{{ route('items.return') }}",
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                item_id: itemID
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert('Item returned successfully!');
+                    localStorage.removeItem('scannedItem');
+                    location.reload();
+                } else {
+                    alert(response.message || 'Failed to return item.');
+                }
+            },
+            error: function () {
+                alert('Server error. Could not process return request.');
+            }
+        });
+    });
+
 
 </script>
 
