@@ -5,6 +5,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\InventoryPdfController;
+use App\Http\Controllers\PasswordController;
 use Illuminate\Support\Facades\Route;
 
 // Authentication Routes
@@ -14,6 +15,10 @@ Route::post('/users/register', [AuthController::class, 'register'])->name('users
 Route::get('/system', [AuthController::class, 'system'])->name('system.view');
 Route::get('/about', [AuthController::class, 'about'])->name('system.about');
 Route::get('/logout', [AuthController::class, 'logout'])->name('users.logout')->middleware('auth');
+
+Route::get('/reset-password', [PasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/password/email', [PasswordController::class, 'sendResetPasswordEmail'])->name('password.email');
+Route::post('/password/update', [PasswordController::class, 'resetPassword'])->name('password.update');
 
 // Protected Routes (Require Authentication)
 Route::middleware(['auth'])->group(function () {
