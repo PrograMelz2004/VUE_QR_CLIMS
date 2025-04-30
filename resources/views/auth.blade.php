@@ -122,6 +122,36 @@
       background-color: #d87c00;
     }
 
+    /* Error message styling */
+    .error-msg {
+      background-color: red;
+      color: white;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .error-msg ul {
+      list-style-type: none;
+    }
+
+    .error-msg button {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0;
+      margin-left: 10px;
+    }
+
+    .error-msg button:hover {
+      color: lightgray;
+    }
+
     /* Modal Styles */
     .modal {
       display: none; /* Hidden by default */
@@ -174,12 +204,14 @@
               <li>{{ $error }}</li>
             @endforeach
           </ul>
+          <button onclick="this.parentElement.style.display='none'">&times;</button>
         </div>
       @endif
 
       @if (session('error'))
         <div class="error-msg">
           {{ session('error') }}
+          <button onclick="this.parentElement.style.display='none'">&times;</button>
         </div>
       @endif
 
