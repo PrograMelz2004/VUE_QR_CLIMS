@@ -78,6 +78,7 @@ class ItemController extends Controller
         $request->validate([
             'name' => 'required|string',
             'quantity' => 'required|integer|min:1',
+            'room_id' => 'required',
             'borrower_name' => 'required|string',
         ]);
 
@@ -91,17 +92,20 @@ class ItemController extends Controller
             return response()->json(['success' => false, 'message' => 'Not enough quantity available.']);
         }
 
-        $item->quantity -= $request->quantity;
-        $item->save();
-
-        Borrowed::create([
+        $res = Borrowed::create([
             'borrower' => $request->borrower_name,
             'item_id' => $item->id,
+            'room_id' => $request->room_id,
             'quantity' => $request->quantity,
             'borrowed_date' => Carbon::now(),
         ]);
 
-        return response()->json(['success' => true]);
+        if ($res) {
+            $item->quantity -= $request->quantity;
+            $item->save();
+
+            return response()->json(['success' => true]);
+        }
     }
 
     public function return(Request $request)
@@ -124,4 +128,25 @@ class ItemController extends Controller
         return response()->json(['success' => true, 'message' => 'Item returned successfully.']);
     }
 
+    public function codes(Request $request)
+    {
+        $search = $request->input('search');
+    
+        $items = DB::table('items')
+            ->when($search, function ($query, $search) {
+                $query->where('qrcode', 'like', "%{$search}%")
+                      ->orWhere('name', 'like', "%{$search}%");
+            })
+            ->limit(20)
+            ->get(['qrcode', 'name']);
+    
+        $results = $items->map(function ($item) {
+            return [
+                'id' => $item->qrcode,
+                'text' => $item->name . ' - ' . $item->qrcode
+            ];
+        })->toArray();
+    
+        return response()->json($results);
+    }
 }

@@ -13,47 +13,51 @@
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item mt-2">
                     <a class="nav-link text-white d-flex align-items-center {{ request()->routeIs('users.view') ? 'active' : '' }}" href="{{ route('users.view') }}">
-                        <img src="img/circle.png" width="24" class="me-2"> Users
+                        <img src="img/users-alt.png" width="24" class="me-2"> Users
                     </a>
                 </li>
 
                 <li class="nav-item mt-2">
                     <a class="nav-link text-white d-flex align-items-center {{ request()->routeIs('items.view') ? 'active' : '' }}" href="{{ route('items.view') }}">
-                        <img src="img/design.png" width="24" class="me-2"> Items
+                        <img src="img/items.png" width="24" class="me-2"> Items
                     </a>
                 </li>
                 <li class="nav-item mt-2">
                     <a class="nav-link text-white d-flex align-items-center {{ request()->routeIs('items.scan') ? 'active' : '' }}" href="{{ route('items.scan') }}">
-                        <img src="img/print.png" width="24" class="me-2"> Borrow / Return
+                        <img src="img/qr-scan.png" width="24" class="me-2"> Transaction
                     </a>
                 </li>
-                
+                <li class="nav-item mt-2">
+                    <a class="nav-link text-white d-flex align-items-center {{ request()->routeIs('items.reports') ? 'active' : '' }}" href="{{ route('items.reports') }}">
+                        <img src="img/graph.png" width="24" class="me-2"> Reports
+                    </a>
+                </li>
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
-                        <img src="img/admin_logo.png" alt="Administrator" class="rounded-circle" width="40" height="40" style="box-shadow: 0 4px 8pxrgb(0, 0, 0);">
+                        <img src="img/admin_logo.png" alt="Administrator" class="rounded-circle" width="40" style="box-shadow: 0 4px 8pxrgb(0, 0, 0);">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
-                        <li class="text-center p-3 border-bottom">
-                            <img src="img/admin_logo.png" class="rounded-circle admin-logo" width="60" height="60">
+                        <li class="text-center pt-3 border-bottom">
+                            <img src="img/admin_logo.png" class="rounded-circle admin-logo" width="60">
                             <p class="text-white mt-2">{{ $user->first_name }} {{ $user->last_name }}</p>
                         </li>
-                        <li class="mt-2 mb-2">
+                        <li class="mt-2">
                             <a class="dropdown-item text-white d-flex align-items-center {{ request()->routeIs('profile.view') ? 'active' : '' }}" href="{{ route('profile.view') }}">
-                                <img src="img/tools.png" width="24" class="me-2"> User Profile
+                                <img src="img/slider.png" width="24" class="me-2"> User Profile
                             </a>
                         </li>
-                        <li class="mt-2 mb-2">
+                        <li class="mb-2">
                             <a class="dropdown-item text-white d-flex align-items-center {{ request()->routeIs('system.edit') ? 'active' : '' }}" href="{{ route('system.edit') }}">
-                                <img src="img/tools.png" width="24" class="me-2"> System Settings
+                                <img src="img/slider.png" width="24" class="me-2"> System Settings
                             </a>
                         </li>
-                        <li class="d-flex justify-content-between p-2 border-top">
+                        <li class="d-flex justify-content-between p-1 border-top">
                             <a href="{{ route('system.view') }}" class="dropdown-item text-center text-white {{ request()->routeIs('system.view') ? 'active' : '' }}" style="flex: 1;">
-                                <img src="img/info.png" alt="System" width="24" height="24" class="me-2"> About
+                                <img src="img/question.png" alt="System" width="24" class="me-2"> About
                             </a>
                             <a href="{{ route('users.logout') }}" class="dropdown-item text-center text-white" style="flex: 1;">
-                                <img src="img/arrow.png" alt="Logout" width="24" height="24" class="me-2"> Logout
+                                <img src="img/sign-out-alt.png" alt="Logout" width="24" class="me-2"> Logout
                             </a>
                         </li>
                     </ul>

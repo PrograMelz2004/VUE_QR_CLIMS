@@ -14,4 +14,5 @@ class Item extends Model
     {
         return $this->belongsTo(Items_list::class);
     }
+    
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\InventoryPdfController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 // Authentication Routes
@@ -31,6 +32,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/items/{id}', [ItemController::class, 'destroy'])->name('items.destroy');
     Route::post('/borrow', [ItemController::class, 'borrow'])->name('items.borrow');
     Route::post('/return', [ItemController::class, 'return'])->name('items.return');
+    Route::get('/codes', [ItemController::class, 'codes'])->name('items.codes');
+
+    // Report Routes
+    Route::get('/reports', [ReportController::class, 'view'])->name('items.reports');
 
     // System Routes
     Route::get('/edit', [SystemController::class, 'settings'])->name('system.edit');

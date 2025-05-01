@@ -14,6 +14,7 @@ class Borrowed extends Model
     protected $fillable = [
         'borrower',
         'item_id',
+        'room_id',
         'quantity',
         'borrowed_date',
     ];
