@@ -23,7 +23,6 @@ class PasswordController extends Controller
         $resetToken = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
         $hashedToken = Hash::make($resetToken);
 
-        // Store the hashed token in the database
         DB::table('password_resets')->insert([
             'email' => $email,
             'token' => $hashedToken,
@@ -54,7 +53,7 @@ class PasswordController extends Controller
             $mail->isHTML(true);
             $mail->Subject = "Password Reset Request";
 
-            $resetLink = url('/reset-password?token=' . $resetToken);
+            $resetLink = url('/reset-password?token=' . $resetToken . '&email=' . urlencode($user->email));
 
             $mail->Body = "
                 <div style='max-width: 600px; margin: auto; padding: 20px; background-color: #ffffff; border-radius: 8px; font-family: Arial, sans-serif; box-shadow: 0 2px 8px rgba(0,0,0,0.1);'>
@@ -79,13 +78,12 @@ class PasswordController extends Controller
     public function showResetForm(Request $request)
     {
         $token = $request->get('token');
-        return view('auth.reset-password', compact('token'));
-    }
+        $email = $request->get('email');
+        return view('auth.reset-password', compact('token', 'email'));
+    }    
 
-    // Method to update the password
     public function resetPassword(Request $request)
     {
-        // Validate the new password and token
         $validated = $request->validate([
             'token' => 'required',
             'email' => 'required|email|exists:password_resets,email',
@@ -94,17 +92,14 @@ class PasswordController extends Controller
 
         $resetRecord = DB::table('password_resets')->where('email', $validated['email'])->first();
 
-        // Check if the token matches
         if (!$resetRecord || !Hash::check($validated['token'], $resetRecord->token)) {
             return back()->with('error', 'Invalid or expired token.');
         }
 
-        // Update the user's password
         $user = User::where('email', $validated['email'])->first();
         $user->password = Hash::make($validated['password']);
         $user->save();
 
-        // Delete the reset token from the database
         DB::table('password_resets')->where('email', $validated['email'])->delete();
 
         return redirect()->route('login')->with('success', 'Your password has been reset.');

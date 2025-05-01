@@ -42,7 +42,7 @@
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">Age</label>
-                    <input type="number" id="editAge" class="form-control" value="{{ $user->age }}">
+                    <input type="number" id="editAge" class="form-control" value="{{ $user->age }}" readonly>
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">Gender</label>
@@ -115,7 +115,33 @@
                 });
             });
         });
+        
+        function calculateAgeFromBirthday(birthday) {
+            let birthDate = new Date(birthday);
+            let today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            let m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        $('#editBirthday').on('change', function () {
+            let age = calculateAgeFromBirthday($(this).val());
+            $('#editAge').val(age);
+        });
+
+        // Also run age calculation on page load, in case the birthday is already pre-filled
+        $(document).ready(function () {
+            let birthday = $('#editBirthday').val();
+            if (birthday) {
+                let age = calculateAgeFromBirthday(birthday);
+                $('#editAge').val(age);
+            }
+        });
     </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

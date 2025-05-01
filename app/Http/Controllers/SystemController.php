@@ -13,7 +13,8 @@ class SystemController extends Controller
         $system = DB::table('system')->first();
         $rooms = DB::table('rooms')->get();
         $user = Auth::user();
-        return view('admin.settings', compact('system', 'rooms', 'user'));
+        $items = DB::table('items_list')->get();
+        return view('admin.settings', compact('system', 'rooms', 'user', 'items'));
     }
 
     public function addRoom(Request $request)
@@ -62,33 +63,24 @@ class SystemController extends Controller
         return response()->json(['error' => 'Room not found.'], 404);
     }
 
-    public function updateShortName(Request $request)
+    public function updateSystemNames(Request $request)
     {
         $request->validate([
-            'sys_s_name' => 'required|string'
-        ]);
-
-        $updated = DB::table('system')->update(['sys_s_name' => $request->sys_s_name]);
-
-        if ($updated) {
-            return response()->json(['success' => true, 'message' => 'Short name updated successfully.']);
-        }
-
-        return response()->json(['error' => 'Failed to update short name.'], 500);
-    }
-
-    public function updateLongName(Request $request)
-    {
-        $request->validate([
+            'sys_s_name' => 'required|string|max:255',
             'sys_l_name' => 'required|string|max:255'
         ]);
 
-        $updated = DB::table('system')->update(['sys_l_name' => $request->sys_l_name]);
+        $updated = DB::table('system')
+            ->where('id', '1')
+            ->update([
+                'sys_s_name' => $request->sys_s_name,
+                'sys_l_name' => $request->sys_l_name
+            ]);
 
         if ($updated) {
-            return response()->json(['success' => true, 'message' => 'Long name updated successfully.']);
+            return response()->json(['success' => true, 'message' => 'System names updated successfully.']);
         }
 
-        return response()->json(['error' => 'Failed to update long name.'], 500);
+        return response()->json(['error' => 'Failed to update system names.'], 500);
     }
 }

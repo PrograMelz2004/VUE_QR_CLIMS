@@ -34,11 +34,13 @@ Route::middleware(['auth'])->group(function () {
 
     // System Routes
     Route::get('/edit', [SystemController::class, 'settings'])->name('system.edit');
-    Route::post('/update/short_name', [SystemController::class, 'updateShortName'])->name('system.update.short_name');
-    Route::post('/update/long_name', [SystemController::class, 'updateLongName'])->name('system.update.long_name');
+    Route::post('/update/names', [SystemController::class, 'updateSystemNames'])->name('system.update.names');
     Route::post('/add-room', [SystemController::class, 'addRoom'])->name('room.add');
     Route::post('/update-room', [SystemController::class, 'editRoom'])->name('room.update');
     Route::post('/delete-room', [SystemController::class, 'deleteRoom'])->name('room.delete');
+    Route::post('/items_list/add', [SystemController::class, 'addRoom'])->name('items_list.add');
+    Route::post('/items_list/update', [SystemController::class, 'editRoom'])->name('items_list.update');
+    Route::post('/items_list/delete', [SystemController::class, 'deleteRoom'])->name('items_list.delete');
 
     // User Routes
     Route::get('/users', [UserController::class, 'index'])->name('users.view');

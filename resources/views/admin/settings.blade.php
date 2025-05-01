@@ -38,9 +38,8 @@
         .receipt-table td {
             border-bottom: 1px dashed gray;
         }
-
         .table-container {
-            max-height: calc(100vh - 200px);
+            max-height: calc(100vh - 300px);
             overflow-y: auto;
         }
     </style>
@@ -50,6 +49,11 @@
     <img src="{{ asset('img/sc_logo_bgr.png') }}" alt="EVSU-DC Logo" class="logo">
 
     <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-white">System Information</h2>
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editSystemNamesModal">Edit System Names</button>
+        </div>
+
         <div class="row">
             <div class="col-md-6">
                 <div class="p-3 bg-dark text-white">
@@ -84,25 +88,39 @@
             </div>
             <div class="col-md-6">
                 <div class="p-3 bg-dark text-white">
-                    <h3>System Short Name</h3>
-                    <input type="text" id="sysShortName" value="{{ $system->sys_s_name }}" class="form-control mb-2" readonly>
-                    <div class="text-end">
-                        <button class="btn btn-sm btn-warning editSName" data-bs-toggle="modal" data-bs-target="#editSNameModal">Edit</button>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3>Items</h3>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addItemModal">Add New</button>
                     </div>
-                </div>
-
-                <div class="p-3 bg-dark text-white mt-3">
-                    <h3>System Long Name</h3>
-                    <input type="text" id="sysLongName" value="{{ $system->sys_l_name }}" class="form-control mb-2" readonly>
-                    <div class="text-end">
-                        <button class="btn btn-sm btn-warning editLName" data-bs-toggle="modal" data-bs-target="#editLNameModal">Edit</button>
+                    <div class="table-container mt-4">
+                        <table class="receipt-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="itemsTable">
+                                @foreach($items as $index => $item)
+                                    <tr id="itemRow_{{ $item->id }}">
+                                        <td>{{ $index + 1 }}.</td>
+                                        <td>{{ $item->name }}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-warning editItemBtn" data-id="{{ $item->id }}" data-name="{{ $item->name }}" data-bs-toggle="modal" data-bs-target="#editItemModal">Edit</button>
+                                            <button class="btn btn-sm btn-danger deleteItemBtn" data-id="{{ $item->id }}">Delete</button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    @include('modals.rooms_modals')
+    @include('modals.system_modals')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -112,8 +130,6 @@
                 $.post("{{ route('room.add') }}", $(this).serialize(), function(){
                     $('#addRoomModal').modal('hide');
                     location.reload();
-                }).fail(function(response){
-                    alert('Error adding room: ' + response.responseText);
                 });
             });
 
@@ -127,8 +143,6 @@
                 $.post("{{ route('room.update') }}", $(this).serialize(), function(){
                     $('#editRoomModal').modal('hide');
                     location.reload();
-                }).fail(function(response){
-                    alert('Error updating room: ' + response.responseText);
                 });
             });
 
@@ -137,57 +151,60 @@
                 if(confirm("Are you sure you want to delete this room?")) {
                     $.post("{{ route('room.delete') }}", { _token: '{{ csrf_token() }}', id: roomId }, function(){
                         $('#roomRow_' + roomId).fadeOut();
-                    }).fail(function(response){
-                        alert('Error deleting room: ' + response.responseText);
                     });
                 }
             });
 
-            // Open Short Name Modal & Populate Input
-            $(".editSName").click(function(){
-                $("#editSysShortName").val($("#sysShortName").val());
-            });
-
-            // Save Updated Short Name
-            $("#editShortNameForm").submit(function(e){
-                e.preventDefault(); // Prevent default form submission
-                let newShortName = $("#editSysShortName").val();
-                let systemId = $("#sysIdShort").val(); // Get correct hidden input value
-
-                $.post("{{ route('system.update.short_name') }}", {
-                    _token: '{{ csrf_token() }}',
-                    id: systemId,
-                    sys_s_name: newShortName
-                }, function(response){
-                    $("#sysShortName").val(newShortName);
-                    $("#editSNameModal").modal('hide');
+            $('#addItemForm').submit(function(e){
+                e.preventDefault();
+                $.post("{{ route('items_list.add') }}", $(this).serialize(), function() {
+                    $('#addItemModal').modal('hide');
                     location.reload();
-                }).fail(function(error){
-                    alert("Error updating system short name: " + error.responseText);
                 });
             });
 
-            // Open Long Name Modal & Populate Input
-            $(".editLName").click(function(){
-                $("#editSysLongName").val($("#sysLongName").val());
+            $('.editItemBtn').click(function() {
+                $('#edit_item_id').val($(this).data('id'));
+                $('#edit_item_name').val($(this).data('name'));
             });
 
-            // Save Updated Long Name
-            $("#editLongNameForm").submit(function(e){
-                e.preventDefault(); // Prevent default form submission
-                let newLongName = $("#editSysLongName").val();
-                let systemId = $("#sysIdLong").val(); // Get correct hidden input value
-
-                $.post("{{ route('system.update.long_name') }}", {
-                    _token: '{{ csrf_token() }}',
-                    id: systemId,
-                    sys_l_name: newLongName
-                }, function(response){
-                    $("#sysLongName").val(newLongName);
-                    $("#editLNameModal").modal('hide');
+            $('#editItemForm').submit(function(e) {
+                e.preventDefault();
+                $.post("{{ route('items_list.update') }}", $(this).serialize(), function() {
+                    $('#editItemModal').modal('hide');
                     location.reload();
-                }).fail(function(error){
-                    alert("Error updating system long name: " + error.responseText);
+                });
+            });
+
+            $('.deleteItemBtn').click(function() {
+                let id = $(this).data('id');
+                if (confirm("Are you sure you want to delete this item?")) {
+                    $.post("{{ route('items_list.delete') }}", {
+                        _token: '{{ csrf_token() }}',
+                        id: id
+                    }, function() {
+                        $('#itemRow_' + id).fadeOut();
+                    });
+                }
+            });
+
+            $('#editSystemNamesForms').submit(function(e) {
+                e.preventDefault();
+
+                let shortName = $('#editSysShortNamef').val();
+                let longName = $('#editSysLongNamef').val();
+
+                $.post("{{ route('system.update.names') }}", {
+                    _token: '{{ csrf_token() }}',
+                    sys_s_name: shortName,
+                    sys_l_name: longName
+                })
+                .done(function(response) {
+                    $('#editSystemNamesModal').modal('hide');
+                    location.reload();
+                })
+                .fail(function(xhr) {
+                    alert('Error: ' + (xhr.responseJSON?.error || 'Something went wrong.'));
                 });
             });
         });

@@ -48,6 +48,12 @@ class ItemController extends Controller
         }
     }
     
+    public function add(Request $request)
+    {
+        Items_list::create($request->all());
+        return response()->json(['success' => true]);
+    }
+
     public function store(Request $request)
     {
         Item::create($request->all());

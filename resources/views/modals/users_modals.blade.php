@@ -21,9 +21,15 @@
                         </div>
                     </div>
                     <div class="row mb-2">
+                        <label for="addBirthday" class="col-4 col-form-label">Birthday:</label>
+                        <div class="col-8">
+                            <input type="date" id="addBirthday" name="birthday" class="form-control mt-2" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
                         <label for="addAge" class="col-4 col-form-label">Age:</label>
                         <div class="col-8">
-                            <input type="number" id="addAge" name="age" class="form-control mt-2" placeholder="Age" required>
+                            <input type="number" id="addAge" name="age" class="form-control mt-2" placeholder="Age" required readonly>
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -46,12 +52,6 @@
                         <label for="addEmail" class="col-4 col-form-label">Email:</label>
                         <div class="col-8">
                             <input type="email" id="addEmail" name="email" class="form-control mt-2" placeholder="Email" required>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <label for="addBirthday" class="col-4 col-form-label">Birthday:</label>
-                        <div class="col-8">
-                            <input type="date" id="addBirthday" name="birthday" class="form-control mt-2" required>
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -183,6 +183,13 @@
                     </div>
 
                     <div class="row mb-2">
+                        <label for="editBirthday" class="col-4 col-form-label">Birthday:</label>
+                        <div class="col-8">
+                            <input type="date" id="editBirthday" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
                         <label for="editAge" class="col-4 col-form-label">Age:</label>
                         <div class="col-8">
                             <input type="number" id="editAge" class="form-control" required>
@@ -203,13 +210,6 @@
                         <label for="editAddress" class="col-4 col-form-label">Address:</label>
                         <div class="col-8">
                             <input type="text" id="editAddress" class="form-control" required>
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <label for="editBirthday" class="col-4 col-form-label">Birthday:</label>
-                        <div class="col-8">
-                            <input type="date" id="editBirthday" class="form-control" required>
                         </div>
                     </div>
 

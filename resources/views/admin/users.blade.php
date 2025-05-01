@@ -124,7 +124,10 @@
             $('#editLname').val(user.last_name);
             $('#editEmail').val(user.email);
             $('#editContact').val(user.contact_number);
-            $('#editAge').val(user.age);
+            
+            let calculatedAge = calculateAge(user.birthday);
+            $('#editAge').val(calculatedAge);
+            
             $('#editGender').val(user.gender);
             $('#editAddress').val(user.address);
             $('#editBirthday').val(user.birthday);
@@ -220,6 +223,27 @@
                 }
             });
         });
+    });
+
+    function calculateAge(birthday) {
+        let birthDate = new Date(birthday);
+        let today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        let m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
+
+    $('#addBirthday').on('change', function () {
+        let age = calculateAge($(this).val());
+        $('#addAge').val(age);
+    });
+
+    $('#editBirthday').on('change', function () {
+        let age = calculateAge($(this).val());
+        $('#editAge').val(age);
     });
 </script>
 

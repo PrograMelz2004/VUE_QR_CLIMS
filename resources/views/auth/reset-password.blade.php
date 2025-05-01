@@ -122,7 +122,7 @@
 
       <div class="form-group">
         <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" value="{{ old('email') }}" required />
+        <input type="email" id="email" name="email" value="{{ $email ?? old('email') }}" readonly required />
       </div>
 
       <div class="form-group">
