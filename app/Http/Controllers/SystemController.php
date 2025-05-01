@@ -63,6 +63,52 @@ class SystemController extends Controller
         return response()->json(['error' => 'Room not found.'], 404);
     }
 
+    public function addItems_list(Request $request)
+    {
+        $request->validate([
+            'item_name' => 'required|string|max:255',
+        ]);
+
+        DB::table('items_list')->insert([
+            'name' => $request->item_name,
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Item added successfully.']);
+    }
+
+    public function editItems_list(Request $request)
+    {
+        $request->validate([
+            'item_id' => 'required|integer',
+            'item_name' => 'required|string|max:255',
+        ]);
+
+        $updated = DB::table('items_list')
+            ->where('id', $request->item_id)
+            ->update(['name' => $request->item_name]);
+
+        if ($updated) {
+            return response()->json(['success' => true, 'message' => 'Item updated successfully.']);
+        }
+
+        return response()->json(['error' => 'Item not found or no changes made.'], 404);
+    }
+
+    public function deleteItems_list(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+        ]);
+
+        $deleted = DB::table('items_list')->where('id', $request->id)->delete();
+
+        if ($deleted) {
+            return response()->json(['success' => true, 'message' => 'Item deleted successfully.']);
+        }
+
+        return response()->json(['error' => 'Item not found.'], 404);
+    }
+
     public function updateSystemNames(Request $request)
     {
         $request->validate([

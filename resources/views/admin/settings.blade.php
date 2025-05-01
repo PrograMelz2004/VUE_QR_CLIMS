@@ -125,6 +125,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function(){
+
+            // Add Room
             $('#addRoomForm').submit(function(e){
                 e.preventDefault();
                 $.post("{{ route('room.add') }}", $(this).serialize(), function(){
@@ -133,11 +135,13 @@
                 });
             });
 
+            // Edit Room - fill modal
             $('.editRoomBtn').click(function(){
                 $('#edit_room_id').val($(this).data('id'));
                 $('#edit_room_name').val($(this).data('name'));
             });
 
+            // Edit Room - submit
             $('#editRoomForm').submit(function(e){
                 e.preventDefault();
                 $.post("{{ route('room.update') }}", $(this).serialize(), function(){
@@ -146,15 +150,20 @@
                 });
             });
 
+            // Delete Room
             $('.deleteRoomBtn').click(function(){
                 let roomId = $(this).data('id');
                 if(confirm("Are you sure you want to delete this room?")) {
-                    $.post("{{ route('room.delete') }}", { _token: '{{ csrf_token() }}', id: roomId }, function(){
+                    $.post("{{ route('room.delete') }}", {
+                        _token: '{{ csrf_token() }}',
+                        id: roomId
+                    }, function(){
                         $('#roomRow_' + roomId).fadeOut();
                     });
                 }
             });
 
+            // Add Item
             $('#addItemForm').submit(function(e){
                 e.preventDefault();
                 $.post("{{ route('items_list.add') }}", $(this).serialize(), function() {
@@ -163,11 +172,13 @@
                 });
             });
 
+            // Edit Item - fill modal
             $('.editItemBtn').click(function() {
                 $('#edit_item_id').val($(this).data('id'));
                 $('#edit_item_name').val($(this).data('name'));
             });
 
+            // Edit Item - submit
             $('#editItemForm').submit(function(e) {
                 e.preventDefault();
                 $.post("{{ route('items_list.update') }}", $(this).serialize(), function() {
@@ -176,6 +187,7 @@
                 });
             });
 
+            // Delete Item
             $('.deleteItemBtn').click(function() {
                 let id = $(this).data('id');
                 if (confirm("Are you sure you want to delete this item?")) {
@@ -188,6 +200,7 @@
                 }
             });
 
+            // Update System Names
             $('#editSystemNamesForms').submit(function(e) {
                 e.preventDefault();
 
@@ -207,6 +220,7 @@
                     alert('Error: ' + (xhr.responseJSON?.error || 'Something went wrong.'));
                 });
             });
+
         });
     </script>
 </body>

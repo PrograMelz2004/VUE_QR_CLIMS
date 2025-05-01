@@ -23,18 +23,19 @@
     }
 
     .logo {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: auto;
-        opacity: 0.1;
-        z-index: -1;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      opacity: 0.1;
+      z-index: -1;
     }
 
     .container {
       padding: 40px;
       background: white;
+      color: black;
       width: 90%;
       max-width: 400px;
       border-radius: 10px;
@@ -109,20 +110,12 @@
       margin-top: 20px;
     }
 
-    .reset-password button {
-      background-color: #ff8c00;
-      border-radius: 5px;
-      padding: 10px;
-      border: none;
-      color: white;
+    .reset-password a {
+      color: #ff8c00;
+      text-decoration: underline;
       cursor: pointer;
     }
 
-    .reset-password button:hover {
-      background-color: #d87c00;
-    }
-
-    /* Error message styling */
     .error-msg {
       background-color: red;
       color: white;
@@ -154,38 +147,50 @@
 
     /* Modal Styles */
     .modal {
-      display: none; /* Hidden by default */
+      display: none;
       position: fixed;
-      top: 0;
+      z-index: 1000;
       left: 0;
+      top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
+      background-color: rgba(0,0,0,0.5);
       justify-content: center;
       align-items: center;
     }
 
     .modal-content {
       background-color: white;
-      padding: 20px;
-      border-radius: 5px;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      color: black;
       text-align: center;
-      width: 300px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
 
-    .modal button {
-      margin: 10px;
+    .modal-content h3 {
+      margin-bottom: 20px;
+    }
+
+    .modal-content button {
+      margin: 10px 5px;
       padding: 10px 20px;
-      background-color: rgb(177, 97, 0);
       border: none;
-      color: white;
       border-radius: 5px;
       cursor: pointer;
+      font-size: 14px;
     }
 
-    .modal button:hover {
-      background-color: rgb(129, 54, 0);
+    #confirmReset {
+      background-color: #ff8c00;
+      color: white;
+    }
+
+    #cancelReset {
+      background-color: #dc3545;
+      color: white;
     }
   </style>
 </head>
@@ -231,35 +236,33 @@
       </form>
       
       <div class="reset-password">
-        <button type="button" id="resetPasswordBtn">Reset Password</button>
-      </div>
-
-      <div id="resetPasswordModal" class="modal">
-        <div class="modal-content">
-          <h3>Send Code to Your Email to Change Password?</h3>
-          <button id="confirmReset">Yes, Send Code</button>
-          <button id="cancelReset">Cancel</button>
-        </div>
+        <p>Forgot password? <a id="resetPasswordBtn">Reset here</a>.</p>
       </div>
     </div>
   </div>
 
+  <!-- Modal -->
+  <div class="modal" id="resetPasswordModal">
+    <div class="modal-content">
+      <h3>Send Code to Your Email to Change Password?</h3>
+      <button id="confirmReset">Yes, Send Code</button>
+      <button id="cancelReset">Cancel</button>
+    </div>
+  </div>
+
   <script>
-    // Get modal elements
     const resetPasswordBtn = document.getElementById('resetPasswordBtn');
     const resetPasswordModal = document.getElementById('resetPasswordModal');
     const confirmReset = document.getElementById('confirmReset');
     const cancelReset = document.getElementById('cancelReset');
 
-    // Open modal when reset button is clicked
     resetPasswordBtn.onclick = function() {
       resetPasswordModal.style.display = 'flex';
-    }
+    };
 
-    // Close modal if cancel button is clicked
     cancelReset.onclick = function() {
       resetPasswordModal.style.display = 'none';
-    }
+    };
 
     confirmReset.onclick = function() {
       const email = document.getElementById('email').value;
@@ -290,7 +293,7 @@
       } else {
         alert('Please enter your email address.');
       }
-    }
+    };
   </script>
 </body>
 </html>

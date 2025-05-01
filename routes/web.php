@@ -38,9 +38,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/add-room', [SystemController::class, 'addRoom'])->name('room.add');
     Route::post('/update-room', [SystemController::class, 'editRoom'])->name('room.update');
     Route::post('/delete-room', [SystemController::class, 'deleteRoom'])->name('room.delete');
-    Route::post('/items_list/add', [SystemController::class, 'addRoom'])->name('items_list.add');
-    Route::post('/items_list/update', [SystemController::class, 'editRoom'])->name('items_list.update');
-    Route::post('/items_list/delete', [SystemController::class, 'deleteRoom'])->name('items_list.delete');
+    Route::post('/items_list/add', [SystemController::class, 'addItems_list'])->name('items_list.add');
+    Route::post('/items_list/update', [SystemController::class, 'editItems_list'])->name('items_list.update');
+    Route::post('/items_list/delete', [SystemController::class, 'deleteItems_list'])->name('items_list.delete');
 
     // User Routes
     Route::get('/users', [UserController::class, 'index'])->name('users.view');
