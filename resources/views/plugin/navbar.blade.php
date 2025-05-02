@@ -13,7 +13,7 @@
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item mt-2">
                     <a class="nav-link text-white d-flex align-items-center {{ request()->routeIs('users.view') ? 'active' : '' }}" href="{{ route('users.view') }}">
-                        <img src="img/users-alt.png" width="24" class="me-2"> Users
+                        <img src="img/users-alt.png" width="24" class="me-2"> Admins
                     </a>
                 </li>
 
@@ -44,12 +44,12 @@
                         </li>
                         <li class="mt-2">
                             <a class="dropdown-item text-white d-flex align-items-center {{ request()->routeIs('profile.view') ? 'active' : '' }}" href="{{ route('profile.view') }}">
-                                <img src="img/slider.png" width="24" class="me-2"> User Profile
+                                <img src="img/slider.png" width="24" class="me-3"> User Profile
                             </a>
                         </li>
                         <li class="mb-2">
                             <a class="dropdown-item text-white d-flex align-items-center {{ request()->routeIs('system.edit') ? 'active' : '' }}" href="{{ route('system.edit') }}">
-                                <img src="img/slider.png" width="24" class="me-2"> System Settings
+                                <img src="img/slider.png" width="24" class="me-3"> System Settings
                             </a>
                         </li>
                         <li class="d-flex justify-content-between p-1 border-top">

@@ -65,8 +65,9 @@
             <tr>
                 <th>#</th>
                 <th>Item Name</th>
-                <th>Quantity</th>
+                <th>Total Qty</th>
                 <th>Borrowed</th>
+                <th>At Shelf</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -77,6 +78,7 @@
                 <td>{{ $list->name }}</td>
                 <td>{{ $list->items->count() }}</td>
                 <td>{{ $list->items->where('quantity', 0)->count() }}</td>
+                <td>{{ $list->items->where('quantity', 1)->count() }}</td>
                 <td>
                     <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#itemListModal{{ $list->id }}">
                         View Items
@@ -85,7 +87,7 @@
             </tr>
             @endforeach
             <tr id="noResultsRow" style="display: none;">
-                <td colspan="3" class="text-center text-white">No results found</td>
+                <td colspan="6" class="text-center text-white">No results found</td>
             </tr>
         </tbody>
     </table>

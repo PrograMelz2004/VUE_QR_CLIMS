@@ -58,7 +58,7 @@
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mt-4 mb-2 text-white">
             <div>
-                <h1 class="mb-4">Borrowed Items Report</h1>
+                <h1 class="mb-2">Borrowed Items Report</h1>
             </div>
             <input type="text" id="searchInput" class="form-control form-control-sm w-25" placeholder="Search...">
         </div>
@@ -88,13 +88,12 @@
                             </tr>
                         @endforeach
                     </tbody>
+                    <tr id="noResultsRow" style="display: none;">
+                        <td colspan="6" class="text-center text-white">No results found</td>
+                    </tr>
                 </table>
             </div>
         @endif
-
-        <div id="noResultsRow" class="no-results">
-            <p>No results found.</p>
-        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

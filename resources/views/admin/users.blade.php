@@ -66,19 +66,23 @@
                 </tr>
             </thead>
             <tbody id="userTable">
-                @foreach ($users as $user)
-                <tr>
-                    <td>{{ $loop->iteration }}.</td>
-                    <td>{{ $user->first_name }} {{ $user->last_name }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ \Carbon\Carbon::parse($user->created_at)->format('M. d, Y h:i A') }}</td>
-                    <td>
-                        <button class="btn btn-success btn-sm userModal" data-user='@json($user)'>View Details</button>
-                        <button class="btn btn-warning btn-sm editUserBtn" data-user='@json($user)'>Edit</button>
-                        <button class="btn btn-danger btn-sm deleteUserBtn" data-id="{{ $user->id }}">Delete</button>
-                    </td>
-                </tr>
-                @endforeach
+                @forelse ($users as $user)
+                    <tr>
+                        <td>{{ $loop->iteration }}.</td>
+                        <td>{{ $user->first_name }} {{ $user->last_name }}</td>
+                        <td>{{ $user->email }}</td>
+                        <td>{{ \Carbon\Carbon::parse($user->created_at)->format('M. d, Y h:i A') }}</td>
+                        <td>
+                            <button class="btn btn-success btn-sm userModal" data-user='@json($user)'>View Details</button>
+                            <button class="btn btn-warning btn-sm editUserBtn" data-user='@json($user)'>Edit</button>
+                            <button class="btn btn-danger btn-sm deleteUserBtn" data-id="{{ $user->id }}">Delete</button>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="text-center text-white">No other admins</td>
+                    </tr>
+                @endforelse
                 <tr id="noResultsRow" style="display: none;">
                     <td colspan="5" class="text-center text-white">No results found</td>
                 </tr>

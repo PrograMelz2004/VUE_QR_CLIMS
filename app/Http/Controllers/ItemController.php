@@ -17,7 +17,6 @@ class ItemController extends Controller
         return view('admin.items', compact('items_lists'), ['user' => Auth::user()]);
     }
     
-
     public function scanner()
     {
         $rooms = DB::table('rooms')->get();
