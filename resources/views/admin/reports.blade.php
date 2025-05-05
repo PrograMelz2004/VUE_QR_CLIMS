@@ -72,6 +72,7 @@
                         <tr>
                             <th>#</th>
                             <th>Item Name</th>
+                            <th>Item Code</th>
                             <th>Borrower</th>
                             <th>Room</th>
                             <th>Borrowed Date</th>
@@ -82,6 +83,7 @@
                             <tr class="searchable">
                                 <td>{{ $index + 1 }}.</td>
                                 <td>{{ $item->item_name }}</td>
+                                <td>{{ $item->item_code }}</td>
                                 <td>{{ $item->borrower }}</td>
                                 <td>{{ $item->room_name }}</td>
                                 <td>{{ $item->borrowed_date }}</td>
